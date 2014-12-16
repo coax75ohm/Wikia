@@ -1,6 +1,7 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
+# don't warn on empty data fields
 no warnings 'uninitialized';
 # use custom version of MediaWiki::Bot
 use File::Basename;
@@ -35,7 +36,6 @@ my $bot = MediaWiki::Bot->new({
     path       => "",
     operator   => $username,
     login_data => { username => $username, password => $password },
-    debug      => 2,
 });
 
 # get list of units
@@ -134,6 +134,6 @@ $wikitext .= "[[Category:Gameplay & Mechanics]]\n";
 $bot->edit({
     page    => "Unit_List",
     text    => $wikitext,
-    summary => "update data",
+    summary => "update data (bot)",
     minor   => 0,
 });
