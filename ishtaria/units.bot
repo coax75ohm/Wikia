@@ -107,4 +107,5 @@ $bot->edit({
     page    => "Unit_List",
     text    => $wikitext,
     summary => "update data",
+    minor   => 0,
 });
