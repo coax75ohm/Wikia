@@ -126,6 +126,10 @@ foreach $unit (@unitlist) {
 # close table
 $wikitext .= "|}\n";
 
+# add category
+$wikitext .= "\n";
+$wikitext .= "[[Category:Gameplay & Mechanics]]\n";
+
 # upload new page, won't do anything if the text wasn't changed
 $bot->edit({
     page    => "Unit_List",
