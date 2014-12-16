@@ -2,15 +2,39 @@
 use strict;
 use warnings;
 no warnings 'uninitialized';
+# use custom version of MediaWiki::Bot
+use File::Basename;
+use lib dirname (__FILE__);
 use MediaWiki::Bot;
 
+# Wikia login info
+my $username = "Coax75ohm";
+my $password;
+
+# prompt for password if cookie file does not exist
+#
+# NOTE: run the bot manually once to create the cookie before adding to cron
+#
+# TODO: add a check for when cookie expires
+#       send out an email warning as date approaches
+my $cookiefile = ".mediawiki-bot-" . $username . "-cookies";
+unless (-e $cookiefile) {
+    print "Wikia Password: ";
+    # turn off echo, this only works on unix
+    system('/bin/stty', '-echo');
+    chomp($password = <STDIN>);
+    system('/bin/stty', 'echo');
+    print "\n";
+}
+
+# initialize bot
 # use unsecured connection, 'cause that's all Wikia offers
 my $bot = MediaWiki::Bot->new({
     protocol   => "http",
     host       => "age-of-ishtaria.wikia.com",
     path       => "",
-    operator   => "coax75ohm",
-    login_data => { username => "Coax75ohm", password => "XXXX" },
+    operator   => $username,
+    login_data => { username => $username, password => $password },
     debug      => 2,
 });
 
