@@ -196,11 +196,6 @@ sub login {
     }
     $self->{username} = $username;    # Remember who we are
 
-    carp "Logging in over plain HTTP is a bad idea, we would be sending secrets"
-        . " (passwords or cookies) in plaintext over an insecure connection."
-        . " To protect against eavesdroppers, set protocol => 'https'"
-        unless $self->{protocol} eq 'https';
-
     # Handle basic auth first, if needed
     if ($basic_auth) {
         warn 'Applying basic auth credentials' if $self->{debug} > 1;
