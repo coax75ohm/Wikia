@@ -56,18 +56,24 @@ foreach $unit (@unitlist) {
            s/^\s*\|\s*//;
 
            # pull out required data fields
-           if    (/^rarity\s*=\s*(\d+)/)       { $units{$unit}{'rarity'} = $1; }
-           elsif (/^type\s*=\s*(\w+)/)         { $units{$unit}{'type'} = ucfirst $1; }
-           elsif (/^element\s*=\s*(\w+)/)      { $units{$unit}{'element'} = ucfirst $1; }
-           elsif (/^skill 1 type\s*=\s*(\w+)/) { $units{$unit}{'skill 1 type'} = ucfirst $1; }
-           elsif (/^skill 2 type\s*=\s*(\w+)/) { $units{$unit}{'skill 2 type'} = ucfirst $1; }
-           elsif (/^atk 0\s*=\s*(\d+)/)        { $units{$unit}{'atk 0'} = $1; }
-           elsif (/^atk 1\s*=\s*(\d+)/)        { $units{$unit}{'atk 1'} = $1; }
-           elsif (/^atk 2\s*=\s*(\d+)/)        { $units{$unit}{'atk 2'} = $1; }
-           elsif (/^hp 0\s*=\s*(\d+)/)         { $units{$unit}{'hp 0'} = $1; }
-           elsif (/^hp 1\s*=\s*(\d+)/)         { $units{$unit}{'hp 1'} = $1; }
-           elsif (/^hp 2\s*=\s*(\d+)/)         { $units{$unit}{'hp 2'} = $1; }
-           elsif (/^cost\s*=\s*(\d+)/)         { $units{$unit}{'cost'} = $1; }
+           if    (/^rarity\s*=\s*(\d+)/)                 { $units{$unit}{'rarity'} = $1; }
+           elsif (/^type\s*=\s*(\w+)/)                   { $units{$unit}{'type'} = ucfirst $1; }
+           elsif (/^element\s*=\s*(\w+)/)                { $units{$unit}{'element'} = ucfirst $1; }
+           elsif (/^skill 1\s*=\s*(\w[\w\s']*\w)/)       { $units{$unit}{'skill 1'} = $1; }
+           elsif (/^skill 1 type\s*=\s*(\w+)/)           { $units{$unit}{'skill 1 type'} = ucfirst $1; }
+           elsif (/^skill 1 desc\s*=\s*(\w[\w\s']*\w)/)  { $units{$unit}{'skill 1 desc'} = $1; }
+           elsif (/^skill 1 proc\s*=\s*(\d+)/)           { $units{$unit}{'skill 1 proc'} = $1; }
+           elsif (/^skill 2\s*=\s*(\w[\w\s']*\w)/)       { $units{$unit}{'skill 2'} = $1; }
+           elsif (/^skill 2 type\s*=\s*(\w+)/      )     { $units{$unit}{'skill 2 type'} = ucfirst $1; }
+           elsif (/^skill 2 desc\s*=\s*(\w[\w\s']*\w)/)  { $units{$unit}{'skill 2 desc'} = $1; }
+           elsif (/^skill 2 proc\s*=\s*(\d+)/)           { $units{$unit}{'skill 2 proc'} = $1; }
+           elsif (/^atk 0\s*=\s*(\d+)/)                  { $units{$unit}{'atk 0'} = $1; }
+           elsif (/^atk 1\s*=\s*(\d+)/)                  { $units{$unit}{'atk 1'} = $1; }
+           elsif (/^atk 2\s*=\s*(\d+)/)                  { $units{$unit}{'atk 2'} = $1; }
+           elsif (/^hp 0\s*=\s*(\d+)/)                   { $units{$unit}{'hp 0'} = $1; }
+           elsif (/^hp 1\s*=\s*(\d+)/)                   { $units{$unit}{'hp 1'} = $1; }
+           elsif (/^hp 2\s*=\s*(\d+)/)                   { $units{$unit}{'hp 2'} = $1; }
+           elsif (/^cost\s*=\s*(\d+)/)                   { $units{$unit}{'cost'} = $1; }
         }
     }
 }
@@ -75,7 +81,7 @@ foreach $unit (@unitlist) {
 # create wikitext for Unit_List page
 my $wikitext = "{{Warning|info=This is a bot generated page. If you notice any missing or incorrect data, please edit the corresponding unit page and it will be updated here next time the bot runs.}}\n";
 $wikitext .= "\n";
-$wikitext .= "Note: To do secondary sorting use shift+click.\n";
+$wikitext .= "Note: Hover over skill to see details. For secondary sorting use shift+click.\n";
 $wikitext .= "\n";
 
 # make table header
@@ -112,8 +118,19 @@ foreach $unit (@unitlist) {
     $wikitext .= "| $units{$unit}{'rarity'}\n";
     $wikitext .= "| $units{$unit}{'type'}\n";
     $wikitext .= "| $units{$unit}{'element'}\n";
-    $wikitext .= "| $units{$unit}{'skill 1 type'}\n";
-    $wikitext .= "| $units{$unit}{'skill 2 type'}\n";
+
+    # create tooltip popup if all skill fields are defined
+    if (defined $units{$unit}{'skill 1'} && defined $units{$unit}{'skill 1 desc'} && defined $units{$unit}{'skill 1 type'} && defined $units{$unit}{'skill 1 proc'}) {
+        $wikitext .= "| <span title=\"$units{$unit}{'skill 1'}&#10;$units{$unit}{'skill 1 desc'}&#10;$units{$unit}{'skill 1 proc'}%\">$units{$unit}{'skill 1 type'}</span>\n";
+    } else {
+        $wikitext .= "| $units{$unit}{'skill 1 type'}\n";
+    }
+    if (defined $units{$unit}{'skill 2'} && defined $units{$unit}{'skill 2 desc'} && defined $units{$unit}{'skill 2 type'} && defined $units{$unit}{'skill 2 proc'}) {
+        $wikitext .= "| <span title=\"$units{$unit}{'skill 2'}&#10;$units{$unit}{'skill 2 desc'}&#10;$units{$unit}{'skill 2 proc'}%\">$units{$unit}{'skill 2 type'}</span>\n";
+    } else {
+        $wikitext .= "| $units{$unit}{'skill 2 type'}\n";
+    }
+
     $wikitext .= "| style=\"background: #FFEEEE\"|$units{$unit}{'atk 0'}\n";
     $wikitext .= "| style=\"background: #FFEEEE\"|$units{$unit}{'atk 1'}\n";
     $wikitext .= "| style=\"background: #FFEEEE\"|$units{$unit}{'atk 2'}\n";
@@ -130,7 +147,9 @@ $wikitext .= "|}\n";
 $wikitext .= "\n";
 $wikitext .= "[[Category:Gameplay & Mechanics]]\n";
 
-# upload new page, won't do anything if the text wasn't changed
+#print $wikitext;
+
+# upload new page, won't do anything if the text wasn't changed (null edit)
 $bot->edit({
     page    => "Unit_List",
     text    => $wikitext,
