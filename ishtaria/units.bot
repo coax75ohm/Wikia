@@ -115,28 +115,52 @@ foreach $unit (@unitlist) {
     }
 
     $wikitext .= "| [[$unit]]\n";
-    $wikitext .= "| $units{$unit}{'rarity'}\n";
+    $wikitext .= "| style=\"text-align: center\"|$units{$unit}{'rarity'}\n";
     $wikitext .= "| $units{$unit}{'type'}\n";
     $wikitext .= "| $units{$unit}{'element'}\n";
 
-    # create tooltip popup if all skill fields are defined
+    # create tooltip popup if all skill 1 fields are defined
     if (defined $units{$unit}{'skill 1'} && defined $units{$unit}{'skill 1 desc'} && defined $units{$unit}{'skill 1 type'} && defined $units{$unit}{'skill 1 proc'}) {
         $wikitext .= "| <span title=\"$units{$unit}{'skill 1'}&#10;$units{$unit}{'skill 1 desc'}&#10;$units{$unit}{'skill 1 proc'}%\">$units{$unit}{'skill 1 type'}</span>\n";
+    # add dash for 1 and 2 star units if they have no skill 1
+    } elsif ($units{$unit}{'rarity'} < 3 && ! defined $units{$unit}{'skill 1 type'}) {
+        $wikitext .= "| style=\"text-align: center\"|-\n";
     } else {
         $wikitext .= "| $units{$unit}{'skill 1 type'}\n";
     }
+
+    # create tooltip popup if all skill 2 fields are defined
     if (defined $units{$unit}{'skill 2'} && defined $units{$unit}{'skill 2 desc'} && defined $units{$unit}{'skill 2 type'} && defined $units{$unit}{'skill 2 proc'}) {
         $wikitext .= "| <span title=\"$units{$unit}{'skill 2'}&#10;$units{$unit}{'skill 2 desc'}&#10;$units{$unit}{'skill 2 proc'}%\">$units{$unit}{'skill 2 type'}</span>\n";
+    # add dash for 1 and 2 star units if they have no skill 2 (none do, but put this here anyway)
+    } elsif ($units{$unit}{'rarity'} < 3 && ! defined $units{$unit}{'skill 2 type'}) {
+        $wikitext .= "| style=\"text-align: center\"|-\n";
     } else {
         $wikitext .= "| $units{$unit}{'skill 2 type'}\n";
     }
+    
+    # ATK
+    $wikitext .= "| style=\"background: #FFEEEE; text-align: right\"|$units{$unit}{'atk 0'}\n";
+    # add dash for ATK +1 and +2 for 1 and 2 star units
+    if ($units{$unit}{'rarity'} < 3) {
+        $wikitext .= "| style=\"background: #FFEEEE; text-align: center\"|-\n";
+        $wikitext .= "| style=\"background: #FFEEEE; text-align: center\"|-\n";
+    } else {
+        $wikitext .= "| style=\"background: #FFEEEE; text-align: right\"|$units{$unit}{'atk 1'}\n";
+        $wikitext .= "| style=\"background: #FFEEEE; text-align: right\"|$units{$unit}{'atk 2'}\n";
+    }
 
-    $wikitext .= "| style=\"background: #FFEEEE\"|$units{$unit}{'atk 0'}\n";
-    $wikitext .= "| style=\"background: #FFEEEE\"|$units{$unit}{'atk 1'}\n";
-    $wikitext .= "| style=\"background: #FFEEEE\"|$units{$unit}{'atk 2'}\n";
-    $wikitext .= "| style=\"background: #EEFFEE\"|$units{$unit}{'hp 0'}\n";
-    $wikitext .= "| style=\"background: #EEFFEE\"|$units{$unit}{'hp 1'}\n";
-    $wikitext .= "| style=\"background: #EEFFEE\"|$units{$unit}{'hp 2'}\n";
+    # HP
+    $wikitext .= "| style=\"background: #EEFFEE; text-align: right\"|$units{$unit}{'hp 0'}\n";
+    # add dash for HP +1 and +2 for 1 and 2 star units
+    if ($units{$unit}{'rarity'} < 3) {
+        $wikitext .= "| style=\"background: #EEFFEE; text-align: center\"|-\n";
+        $wikitext .= "| style=\"background: #EEFFEE; text-align: center\"|-\n";
+    } else {
+        $wikitext .= "| style=\"background: #EEFFEE; text-align: right\"|$units{$unit}{'hp 1'}\n";
+        $wikitext .= "| style=\"background: #EEFFEE; text-align: right\"|$units{$unit}{'hp 2'}\n";
+    }
+
     $wikitext .= "| $units{$unit}{'cost'}\n";
 }
 
@@ -148,6 +172,7 @@ $wikitext .= "\n";
 $wikitext .= "[[Category:Gameplay & Mechanics]]\n";
 
 #print $wikitext;
+#exit;
 
 # upload new page, won't do anything if the text wasn't changed (null edit)
 $bot->edit({
