@@ -12,14 +12,14 @@ use MediaWiki::Bot;
 my $username = "Coax75ohm";
 my $password;
 
-# prompt for password if cookie file does not exist
+# prompt for password if not defined and cookie file does not exist 
 #
 # NOTE: run the bot manually once to create the cookie before adding to cron
 #
 # TODO: add a check for when cookie expires
 #       send out an email warning as date approaches
 my $cookiefile = ".mediawiki-bot-" . $username . "-cookies";
-unless (-e $cookiefile) {
+if (! defined $password  && ! -e $cookiefile) {
     print "Wikia Password: ";
     # turn off echo, this only works on unix
     system('/bin/stty', '-echo');
