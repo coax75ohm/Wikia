@@ -182,30 +182,32 @@ $bot->edit({
 # make hash of hashes for all skill desc and skill types, value is a counter
 my %skills;
 foreach $unit (@unitlist) {
-    if (defined $units{$unit}{'skill 1 type'} && defined $units{$unit}{'skill 1 desc'}) {
-        $skills{$units{$unit}{'skill 1 type'}}{$units{$unit}{'skill 1 desc'}}++;
+    if (defined $units{$unit}{'skill 1 desc'} && defined $units{$unit}{'skill 1 type'}) {
+        $skills{$units{$unit}{'skill 1 desc'}}{$units{$unit}{'skill 1 type'}}++;
     }
-    if (defined $units{$unit}{'skill 2 type'} && defined $units{$unit}{'skill 2 desc'}) {
-        $skills{$units{$unit}{'skill 2 type'}}{$units{$unit}{'skill 2 desc'}}++;
+    if (defined $units{$unit}{'skill 2 desc'} && defined $units{$unit}{'skill 2 type'}) {
+        $skills{$units{$unit}{'skill 2 desc'}}{$units{$unit}{'skill 2 type'}}++;
     }
 }
 
 # create subcategory pages for skill desc under skill type
 #
-# TODO: check if skill desc has more than one skill type
+# NOTE: a skill desc can be under more than one skill type
 #
 # TODO: check Category:Skill_Descriptions list against hash table 
 #       and delete any unused skill desc pages
 my ($skilltype, $skilldesc);
-foreach $skilltype (sort keys %skills) {
-    my $wikitext = "[[Category:$skilltype]]\n";    
-    $wikitext .= "[[Category:Skill Descriptions]]\n";
-    foreach $skilldesc (sort keys %{$skills{$skilltype}}) {
-        $bot->edit({
-            page    => "Category:$skilldesc",
-            text    => $wikitext,
-            summary => "update categories (bot)",
-            minor   => 0,
-        });
+foreach $skilldesc (sort keys %skills) {
+    my $wikitext;
+    foreach $skilltype (sort keys %{$skills{$skilldesc}}) {
+        $wikitext .= "[[Category:$skilltype]]\n";    
     }
+    $wikitext .= "[[Category:Skill Descriptions]]\n";
+
+    $bot->edit({
+        page    => "Category:$skilldesc",
+        text    => $wikitext,
+        summary => "update categories (bot)",
+        minor   => 0,
+    });
 }
