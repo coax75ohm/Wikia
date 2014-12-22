@@ -192,6 +192,8 @@ foreach $unit (@unitlist) {
 
 # create subcategory pages for skill desc under skill type
 #
+# TODO: check if skill desc has more than one skill type
+#
 # TODO: check Category:Skill_Descriptions list against hash table 
 #       and delete any unused skill desc pages
 my ($skilltype, $skilldesc);
