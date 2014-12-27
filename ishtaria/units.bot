@@ -85,22 +85,22 @@ $wikitext .= "Note: Hover over skill to see details. For secondary sorting use s
 $wikitext .= "\n";
 
 # make table header
-$wikitext .= "{| class=\"wikitable sortable\"\n";
+$wikitext .= "{| class=\"wikitable filterable sortable\"\n";
 $wikitext .= "|-\n";
-$wikitext .= "! class=\"unsortable\"|Image\n";
-$wikitext .= "! Name\n";
-$wikitext .= "! Rarity\n";
-$wikitext .= "! Type\n";
-$wikitext .= "! Element\n";
-$wikitext .= "! Skill 1\n";
-$wikitext .= "! Skill 2\n";
-$wikitext .= "! ATK\n";
-$wikitext .= "! ATK +1\n";
-$wikitext .= "! ATK +2\n";
-$wikitext .= "! HP\n";
-$wikitext .= "! HP +1\n";
-$wikitext .= "! HP +2\n";
-$wikitext .= "! Cost\n";
+$wikitext .= "! class=\"unfilterable unsortable\"|Image\n";
+$wikitext .= "! class=\"unfilterable\"|Name\n";
+$wikitext .= "! class=\"unsortable\"|Rarity\n";
+$wikitext .= "! class=\"unsortable\"|Type\n";
+$wikitext .= "! class=\"unsortable\"|Element\n";
+$wikitext .= "! class=\"unsortable\"|Skill 1\n";
+$wikitext .= "! class=\"unsortable\"|Skill 2\n";
+$wikitext .= "! class=\"unfilterable\"|ATK\n";
+$wikitext .= "! class=\"unfilterable\"|ATK +1\n";
+$wikitext .= "! class=\"unfilterable\"|ATK +2\n";
+$wikitext .= "! class=\"unfilterable\"|HP\n";
+$wikitext .= "! class=\"unfilterable\"|HP +1\n";
+$wikitext .= "! class=\"unfilterable\"|HP +2\n";
+$wikitext .= "! class=\"unfilterable\"|Cost\n";
 
 # make table row for each unit
 foreach $unit (@unitlist) {
