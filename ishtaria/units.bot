@@ -94,13 +94,13 @@ $wikitext .= "! class=\"unsortable\"|Type\n";
 $wikitext .= "! class=\"unsortable\"|Element\n";
 $wikitext .= "! class=\"unsortable\"|Skill 1\n";
 $wikitext .= "! class=\"unsortable\"|Skill 2\n";
-$wikitext .= "! class=\"unfilterable\"|ATK\n";
-$wikitext .= "! class=\"unfilterable\"|ATK +1\n";
-$wikitext .= "! class=\"unfilterable\"|ATK +2\n";
-$wikitext .= "! class=\"unfilterable\"|HP\n";
-$wikitext .= "! class=\"unfilterable\"|HP +1\n";
-$wikitext .= "! class=\"unfilterable\"|HP +2\n";
-$wikitext .= "! class=\"unfilterable\"|Cost\n";
+$wikitext .= "! class=\"unfilterable\" data-sort-type=\"number\"|ATK\n";
+$wikitext .= "! class=\"unfilterable\" data-sort-type=\"number\"|ATK +1\n";
+$wikitext .= "! class=\"unfilterable\" data-sort-type=\"number\"|ATK +2\n";
+$wikitext .= "! class=\"unfilterable\" data-sort-type=\"number\"|HP\n";
+$wikitext .= "! class=\"unfilterable\" data-sort-type=\"number\"|HP +1\n";
+$wikitext .= "! class=\"unfilterable\" data-sort-type=\"number\"|HP +2\n";
+$wikitext .= "! class=\"unfilterable\" data-sort-type=\"number\"|Cost\n";
 
 # make table row for each unit
 foreach $unit (@unitlist) {
