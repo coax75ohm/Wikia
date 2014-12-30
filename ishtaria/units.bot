@@ -141,8 +141,8 @@ foreach $unit (@unitlist) {
     
     # ATK
     $wikitext .= "| style=\"background: #FFEEEE; text-align: right\"|$units{$unit}{'atk 0'}\n";
-    # add dash for ATK +1 and +2 for 1 and 2 star units
-    if ($units{$unit}{'rarity'} < 3) {
+    # add dash for ATK +1 and +2 for 1 and 2 star units plus Elise
+    if ($units{$unit}{'rarity'} < 3 || $unit eq 'Elise') {
         $wikitext .= "| style=\"background: #FFEEEE; text-align: center\"|-\n";
         $wikitext .= "| style=\"background: #FFEEEE; text-align: center\"|-\n";
     } else {
@@ -152,8 +152,8 @@ foreach $unit (@unitlist) {
 
     # HP
     $wikitext .= "| style=\"background: #EEFFEE; text-align: right\"|$units{$unit}{'hp 0'}\n";
-    # add dash for HP +1 and +2 for 1 and 2 star units
-    if ($units{$unit}{'rarity'} < 3) {
+    # add dash for HP +1 and +2 for 1 and 2 star units plus Elise
+    if ($units{$unit}{'rarity'} < 3 || $unit eq 'Elise') {
         $wikitext .= "| style=\"background: #EEFFEE; text-align: center\"|-\n";
         $wikitext .= "| style=\"background: #EEFFEE; text-align: center\"|-\n";
     } else {
