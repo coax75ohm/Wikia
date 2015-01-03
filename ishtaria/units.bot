@@ -38,6 +38,9 @@ my $bot = MediaWiki::Bot->new({
     login_data => { username => $username, password => $password },
 });
 
+# set permissions on cookie file
+chmod 0600, $cookiefile if (-e $cookiefile);
+
 # get list of units
 my @unitlist = $bot->get_pages_in_category('Category:Units');
 
