@@ -13,11 +13,6 @@ my $username = "Coax75ohm";
 my $password;
 
 # prompt for password if not defined and cookie file does not exist 
-#
-# NOTE: run the bot manually once to create the cookie before adding to cron
-#
-# TODO: add a check for when cookie expires
-#       send out an email warning as date approaches
 my $cookiefile = ".mediawiki-bot-" . $username . "-cookies";
 if (! defined $password  && ! -e $cookiefile) {
     print "Wikia Password: ";
@@ -77,6 +72,7 @@ foreach $unit (@unitlist) {
            elsif (/^hp 1\s*=\s*(\d+)/)                    { $units{$unit}{'hp 1'} = $1; }
            elsif (/^hp 2\s*=\s*(\d+)/)                    { $units{$unit}{'hp 2'} = $1; }
            elsif (/^cost\s*=\s*(\d+)/)                    { $units{$unit}{'cost'} = $1; }
+           elsif (/^no evo\s*=\s*(\S+)/)                  { $units{$unit}{'no evo'} = $1; }
         }
     }
 }
@@ -144,8 +140,8 @@ foreach $unit (@unitlist) {
     
     # ATK
     $wikitext .= "| style=\"background: #FFEEEE; text-align: right\"|$units{$unit}{'atk 0'}\n";
-    # add dash for ATK +1 and +2 for 1 and 2 star units plus Elise
-    if ($units{$unit}{'rarity'} < 3 || $unit eq 'Elise') {
+    # add dash for ATK +1 and +2 for 1 and 2 star units plus no evo
+    if ($units{$unit}{'rarity'} < 3 || $units{$unit}{'no evo'}) {
         $wikitext .= "| style=\"background: #FFEEEE; text-align: center\"|-\n";
         $wikitext .= "| style=\"background: #FFEEEE; text-align: center\"|-\n";
     } else {
@@ -155,8 +151,8 @@ foreach $unit (@unitlist) {
 
     # HP
     $wikitext .= "| style=\"background: #EEFFEE; text-align: right\"|$units{$unit}{'hp 0'}\n";
-    # add dash for HP +1 and +2 for 1 and 2 star units plus Elise
-    if ($units{$unit}{'rarity'} < 3 || $unit eq 'Elise') {
+    # add dash for HP +1 and +2 for 1 and 2 star units plus no evo
+    if ($units{$unit}{'rarity'} < 3 || $units{$unit}{'no evo'}) {
         $wikitext .= "| style=\"background: #EEFFEE; text-align: center\"|-\n";
         $wikitext .= "| style=\"background: #EEFFEE; text-align: center\"|-\n";
     } else {
