@@ -79,6 +79,7 @@ foreach $unit (@unitlist) {
            elsif (/^hp 2\s*=\s*(\d+)/)                    { $units{$unit}{'hp 2'} = $1; }
            elsif (/^cost\s*=\s*(\d+)/)                    { $units{$unit}{'cost'} = $1; }
            elsif (/^no evo\s*=\s*(\S+)/)                  { $units{$unit}{'no evo'} = $1; }
+           elsif (/^unreleased\s*=\s*(\S+)/)              { $units{$unit}{'unreleased'} = $1; }
         }
     }
 }
@@ -109,6 +110,9 @@ $wikitext .= "! class=\"unfilterable\" data-sort-type=\"number\"|Cost\n";
 
 # make table row for each unit
 foreach $unit (@unitlist) {
+    # do not include unreleased units
+    next if $units{$unit}{'unreleased'};
+
     $wikitext .= "|-\n";
 
     # add image for unit if PNG file exists
