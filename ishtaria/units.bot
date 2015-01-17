@@ -12,6 +12,9 @@ use MediaWiki::Bot;
 my $username = "Coax75ohm";
 my $password;
 
+# timezone info
+$ENV{TZ} = "America/Chicago";
+
 # prompt for password if not defined and cookie file does not exist 
 my $cookiefile = ".mediawiki-bot-" . $username . "-cookies";
 if (! defined $password  && ! -e $cookiefile) {
@@ -35,6 +38,9 @@ my $bot = MediaWiki::Bot->new({
 
 # set permissions on cookie file
 chmod 0600, $cookiefile if (-e $cookiefile);
+
+# loop for continuously running bot
+MAIN_LOOP:
 
 # get list of units
 my @unitlist = $bot->get_pages_in_category('Category:Units');
@@ -192,6 +198,7 @@ foreach $unit (@unitlist) {
 # create subcategory pages for skill desc under skill type
 #
 # NOTE: a skill desc can be under more than one skill type
+#       this is most likely caused by transcription error
 #
 # TODO: check Category:Skill_Descriptions list against hash table 
 #       and delete any unused skill desc pages
@@ -210,3 +217,8 @@ foreach $skilldesc (sort keys %skills) {
         minor   => 0,
     });
 }
+
+# loop for continuously running bot
+print "Pass finished: " . scalar(localtime) . "\n";
+sleep 3600;
+goto MAIN_LOOP;
