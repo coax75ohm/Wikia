@@ -117,20 +117,20 @@ $wikitext .= "! class=\"unfilterable\" data-sort-type=\"number\"|Cost\n";
 # make table row for each unit
 foreach $unit (@unitlist) {
     # do not include unreleased units
-    next if defined($units{$unit}{'unreleased'});
+    next if $units{$unit}{'unreleased'};
 
     $wikitext .= "|-\n";
 
     # add image for unit if PNG file exists
     my $pageid = $bot->get_id("File:$unit.png");
-    if (defined($pageid)) {
-        if (defined($units{$unit}{'gender'})) {
+    if (defined $pageid) {
+        if (defined $units{$unit}{'gender'}) {
             $wikitext .= "| class=\"$units{$unit}{'gender'}\"| [[File:$unit.png|40px]]\n";
         } else {
             $wikitext .= "| [[File:$unit.png|40px]]\n";
         }
     } else {
-        if (defined($units{$unit}{'gender'})) {
+        if (defined $units{$unit}{'gender'}) {
             $wikitext .= "| class=\"$units{$unit}{'gender'}\"| \n";
         } else {
             $wikitext .= "| \n";
