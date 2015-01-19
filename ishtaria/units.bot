@@ -30,7 +30,7 @@ if (! defined $password  && ! -e $cookiefile) {
 # use unsecured connection, 'cause that's all Wikia offers
 my $bot = MediaWiki::Bot->new({
     protocol   => "http",
-    host       => "age-of-ishtaria.wikia.com",
+    host       => "ishtaria.wikia.com",
     path       => "",
     operator   => $username,
     login_data => { username => $username, password => $password },
@@ -63,6 +63,8 @@ foreach $unit (@unitlist) {
            if    (/^rarity\s*=\s*(\d+)/)                  { $units{$unit}{'rarity'} = $1; }
            elsif (/^type\s*=\s*(\w+)/)                    { $units{$unit}{'type'} = ucfirst $1; }
            elsif (/^element\s*=\s*(\w+)/)                 { $units{$unit}{'element'} = ucfirst $1; }
+           # gender is lowercase because it's used as a class for the javascript filter
+           elsif (/^gender\s*=\s*(\w+)/)                  { $units{$unit}{'gender'} = lcfirst $1; }
            elsif (/^skill 1\s*=\s*(\w[\w\s']*\w)/)        { $units{$unit}{'skill 1'} = $1; }
            elsif (/^skill 1 type\s*=\s*(\w+)/)            { $units{$unit}{'skill 1 type'} = ucfirst $1; }
            elsif (/^skill 1 desc\s*=\s*(\w[\w\s'&]*\w)/)  { $units{$unit}{'skill 1 desc'} = $1; }
@@ -85,15 +87,19 @@ foreach $unit (@unitlist) {
 }
 
 # create wikitext for Unit_List page
-my $wikitext = "{{Warning|info=This is a bot generated page. If you notice any missing or incorrect data, please edit the corresponding unit page and it will be updated here next time the bot runs.}}\n";
-$wikitext .= "\n";
-$wikitext .= "Note: Hover over skill to see details. For secondary sorting use shift+click.\n";
-$wikitext .= "\n";
+my $wikitext = "<div class=\"mw-collapsible mw-collapsed\">\n";
+$wikitext .= "'''Notes'''\n";
+$wikitext .= "<div class=\"mw-collapsible-content\">\n";
+$wikitext .= ":Gender filtering uses image column.\n";
+$wikitext .= ":Hover over skills to see details.\n";
+$wikitext .= ":For secondary sorting use shift+click.\n";
+$wikitext .= "{{Warning|info=This is a bot generated page. If you notice any missing or incorrect data, please edit the corresponding unit page and it will be updated here next time the bot runs.}}\n";
+$wikitext .= "</div></div>\n";
 
 # make table header
 $wikitext .= "{| class=\"wikitable filterable sortable\"\n";
 $wikitext .= "|-\n";
-$wikitext .= "! class=\"unfilterable unsortable\"|Image\n";
+$wikitext .= "! class=\"unsortable\"|Image\n";
 $wikitext .= "! class=\"unfilterable\"|Name\n";
 $wikitext .= "! class=\"unsortable\"|Rarity\n";
 $wikitext .= "! class=\"unsortable\"|Type\n";
@@ -111,16 +117,24 @@ $wikitext .= "! class=\"unfilterable\" data-sort-type=\"number\"|Cost\n";
 # make table row for each unit
 foreach $unit (@unitlist) {
     # do not include unreleased units
-    next if $units{$unit}{'unreleased'};
+    next if defined($units{$unit}{'unreleased'});
 
     $wikitext .= "|-\n";
 
     # add image for unit if PNG file exists
     my $pageid = $bot->get_id("File:$unit.png");
     if (defined($pageid)) {
-        $wikitext .= "| [[File:$unit.png|40px]]\n"
+        if (defined($units{$unit}{'gender'})) {
+            $wikitext .= "| class=\"$units{$unit}{'gender'}\"| [[File:$unit.png|40px]]\n";
+        } else {
+            $wikitext .= "| [[File:$unit.png|40px]]\n";
+        }
     } else {
-        $wikitext .= "| \n";
+        if (defined($units{$unit}{'gender'})) {
+            $wikitext .= "| class=\"$units{$unit}{'gender'}\"| \n";
+        } else {
+            $wikitext .= "| \n";
+        }
     }
 
     $wikitext .= "| [[$unit]]\n";
