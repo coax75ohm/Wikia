@@ -3,10 +3,15 @@ use strict;
 use warnings;
 # don't warn on empty data fields
 no warnings 'uninitialized';
+
 # use custom version of MediaWiki::Bot
 use File::Basename;
 use lib dirname (__FILE__);
 use MediaWiki::Bot;
+
+# turn on autoflush for logging
+use IO::Handle;
+autoflush STDOUT 1;
 
 # Wikia login info
 my $username = "Coax75ohm";
@@ -88,11 +93,8 @@ foreach $unit (@unitlist) {
 
 # create wikitext for Unit_List page
 my $wikitext = "<div class=\"mw-collapsible mw-collapsed\">\n";
-$wikitext .= "'''Notes'''\n";
+$wikitext .= "'''Note'''\n";
 $wikitext .= "<div class=\"mw-collapsible-content\">\n";
-$wikitext .= ":Gender filtering uses image column.\n";
-$wikitext .= ":Hover over skills to see details.\n";
-$wikitext .= ":For secondary sorting use shift+click.\n";
 $wikitext .= "{{Warning|info=This is a bot generated page. If you notice any missing or incorrect data, please edit the corresponding unit page and it will be updated here next time the bot runs.}}\n";
 $wikitext .= "</div></div>\n";
 
@@ -195,6 +197,7 @@ $wikitext .= "\n";
 $wikitext .= "[[Category:Gameplay & Mechanics]]\n";
 
 # upload new Unit_List page, won't do anything if the text wasn't changed (null edit)
+print "Editing Unit_List\n";
 $bot->edit({
     page    => "Unit_List",
     text    => $wikitext,
@@ -204,12 +207,16 @@ $bot->edit({
 
 # make hash of hashes for all skill desc and skill types, value is a counter
 my %skills;
+# old categories sometimes stick around after manual deletion, not sure if this is the fix
+undef %skills;
 foreach $unit (@unitlist) {
     if (defined $units{$unit}{'skill 1 desc'} && defined $units{$unit}{'skill 1 type'}) {
         $skills{$units{$unit}{'skill 1 desc'}}{$units{$unit}{'skill 1 type'}}++;
+        print "$unit skill 1: $units{$unit}{'skill 1 type'} - $units{$unit}{'skill 1 desc'}\n"; 
     }
     if (defined $units{$unit}{'skill 2 desc'} && defined $units{$unit}{'skill 2 type'}) {
         $skills{$units{$unit}{'skill 2 desc'}}{$units{$unit}{'skill 2 type'}}++;
+        print "$unit skill 2: $units{$unit}{'skill 2 type'} - $units{$unit}{'skill 2 desc'}\n"; 
     }
 }
 
@@ -228,6 +235,7 @@ foreach $skilldesc (sort keys %skills) {
     }
     $wikitext .= "[[Category:Skill Descriptions]]\n";
 
+    print "Editing Category:$skilldesc\n";
     $bot->edit({
         page    => "Category:$skilldesc",
         text    => $wikitext,
