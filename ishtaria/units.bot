@@ -101,20 +101,20 @@ $wikitext .= "</div></div>\n";
 # make table header
 $wikitext .= "{| class=\"wikitable filterable sortable\"\n";
 $wikitext .= "|-\n";
-$wikitext .= "! class=\"unsortable\"|Image\n";
-$wikitext .= "! class=\"unfilterable\"|Name\n";
-$wikitext .= "! class=\"unsortable\"|Rarity\n";
-$wikitext .= "! class=\"unsortable\"|Type\n";
-$wikitext .= "! class=\"unsortable\"|Element\n";
-$wikitext .= "! class=\"unsortable\"|Skill 1\n";
-$wikitext .= "! class=\"unsortable\"|Skill 2\n";
-$wikitext .= "! class=\"unfilterable\" data-sort-type=\"number\"|ATK\n";
-$wikitext .= "! class=\"unfilterable\" data-sort-type=\"number\"|ATK +1\n";
-$wikitext .= "! class=\"unfilterable\" data-sort-type=\"number\"|ATK +2\n";
-$wikitext .= "! class=\"unfilterable\" data-sort-type=\"number\"|HP\n";
-$wikitext .= "! class=\"unfilterable\" data-sort-type=\"number\"|HP +1\n";
-$wikitext .= "! class=\"unfilterable\" data-sort-type=\"number\"|HP +2\n";
-$wikitext .= "! class=\"unfilterable\" data-sort-type=\"number\"|Cost\n";
+$wikitext .= "! class=\"unsortable\"| Image\n";
+$wikitext .= "! class=\"unfilterable\"| Name\n";
+$wikitext .= "! class=\"unsortable\"| Rarity\n";
+$wikitext .= "! class=\"unsortable\"| Type\n";
+$wikitext .= "! class=\"unsortable\"| Element\n";
+$wikitext .= "! class=\"unsortable\"| Skill 1\n";
+$wikitext .= "! class=\"unsortable\"| Skill 2\n";
+$wikitext .= "! class=\"unfilterable\" data-sort-type=\"number\"| ATK\n";
+$wikitext .= "! class=\"unfilterable\" data-sort-type=\"number\"| ATK +1\n";
+$wikitext .= "! class=\"unfilterable\" data-sort-type=\"number\"| ATK +2\n";
+$wikitext .= "! class=\"unfilterable\" data-sort-type=\"number\"| HP\n";
+$wikitext .= "! class=\"unfilterable\" data-sort-type=\"number\"| HP +1\n";
+$wikitext .= "! class=\"unfilterable\" data-sort-type=\"number\"| HP +2\n";
+$wikitext .= "! class=\"unfilterable\" data-sort-type=\"number\"| Cost\n";
 
 # make table row for each unit
 foreach $unit (@unitlist) {
@@ -140,53 +140,53 @@ foreach $unit (@unitlist) {
     }
 
     $wikitext .= "| [[$unit]]\n";
-    $wikitext .= "| style=\"text-align: center\"|$units{$unit}{'rarity'}\n";
+    $wikitext .= "| class=\"center\"| $units{$unit}{'rarity'}\n";
     $wikitext .= "| $units{$unit}{'type'}\n";
     $wikitext .= "| $units{$unit}{'element'}\n";
 
     # create tooltip popup if all skill 1 fields are defined
     if (defined $units{$unit}{'skill 1'} && defined $units{$unit}{'skill 1 desc'} && defined $units{$unit}{'skill 1 type'} && defined $units{$unit}{'skill 1 proc'}) {
-        $wikitext .= "| <span title=\"$units{$unit}{'skill 1'}&#10;$units{$unit}{'skill 1 desc'}&#10;$units{$unit}{'skill 1 proc'}%\">$units{$unit}{'skill 1 type'}</span>\n";
+        $wikitext .= "| {{UnitListSkill | type=$units{$unit}{'skill 1 type'} | name=$units{$unit}{'skill 1'} | desc=$units{$unit}{'skill 1 desc'} | proc=$units{$unit}{'skill 1 proc'}%}}\n";
     # add dash for 1 and 2 star units if they have no skill 1
     } elsif ($units{$unit}{'rarity'} < 3 && ! defined $units{$unit}{'skill 1 type'}) {
-        $wikitext .= "| style=\"text-align: center\"|-\n";
+        $wikitext .= "| class=\"center\"| -\n";
     } else {
         $wikitext .= "| $units{$unit}{'skill 1 type'}\n";
     }
 
     # create tooltip popup if all skill 2 fields are defined
     if (defined $units{$unit}{'skill 2'} && defined $units{$unit}{'skill 2 desc'} && defined $units{$unit}{'skill 2 type'} && defined $units{$unit}{'skill 2 proc'}) {
-        $wikitext .= "| <span title=\"$units{$unit}{'skill 2'}&#10;$units{$unit}{'skill 2 desc'}&#10;$units{$unit}{'skill 2 proc'}%\">$units{$unit}{'skill 2 type'}</span>\n";
+        $wikitext .= "| {{UnitListSkill | type=$units{$unit}{'skill 2 type'} | name=$units{$unit}{'skill 2'} | desc=$units{$unit}{'skill 2 desc'} | proc=$units{$unit}{'skill 2 proc'}%}}\n";
     # add dash for 1 and 2 star units if they have no skill 2 (none do, but put this here anyway)
     } elsif ($units{$unit}{'rarity'} < 3 && ! defined $units{$unit}{'skill 2 type'}) {
-        $wikitext .= "| style=\"text-align: center\"|-\n";
+        $wikitext .= "| class=\"center\"| -\n";
     } else {
         $wikitext .= "| $units{$unit}{'skill 2 type'}\n";
     }
     
     # ATK
-    $wikitext .= "| style=\"background: #FFEEEE; text-align: right\"|$units{$unit}{'atk 0'}\n";
+    $wikitext .= "| class=\"atk right\"| $units{$unit}{'atk 0'}\n";
     # add dash for ATK +1 and +2 for 1 and 2 star units plus no evo
     if ($units{$unit}{'rarity'} < 3 || $units{$unit}{'no evo'}) {
-        $wikitext .= "| style=\"background: #FFEEEE; text-align: center\"|-\n";
-        $wikitext .= "| style=\"background: #FFEEEE; text-align: center\"|-\n";
+        $wikitext .= "| class=\"atk center\"| -\n";
+        $wikitext .= "| class=\"atk center\"| -\n";
     } else {
-        $wikitext .= "| style=\"background: #FFEEEE; text-align: right\"|$units{$unit}{'atk 1'}\n";
-        $wikitext .= "| style=\"background: #FFEEEE; text-align: right\"|$units{$unit}{'atk 2'}\n";
+        $wikitext .= "| class=\"atk right\"| $units{$unit}{'atk 1'}\n";
+        $wikitext .= "| class=\"atk right\"| $units{$unit}{'atk 2'}\n";
     }
 
     # HP
-    $wikitext .= "| style=\"background: #EEFFEE; text-align: right\"|$units{$unit}{'hp 0'}\n";
+    $wikitext .= "| class=\"hp right\"| $units{$unit}{'hp 0'}\n";
     # add dash for HP +1 and +2 for 1 and 2 star units plus no evo
     if ($units{$unit}{'rarity'} < 3 || $units{$unit}{'no evo'}) {
-        $wikitext .= "| style=\"background: #EEFFEE; text-align: center\"|-\n";
-        $wikitext .= "| style=\"background: #EEFFEE; text-align: center\"|-\n";
+        $wikitext .= "| class=\"hp center\"| -\n";
+        $wikitext .= "| class=\"hp center\"| -\n";
     } else {
-        $wikitext .= "| style=\"background: #EEFFEE; text-align: right\"|$units{$unit}{'hp 1'}\n";
-        $wikitext .= "| style=\"background: #EEFFEE; text-align: right\"|$units{$unit}{'hp 2'}\n";
+        $wikitext .= "| class=\"hp right\"| $units{$unit}{'hp 1'}\n";
+        $wikitext .= "| class=\"hp right\"| $units{$unit}{'hp 2'}\n";
     }
 
-    $wikitext .= "| $units{$unit}{'cost'}\n";
+    $wikitext .= "| class=\"center\"| $units{$unit}{'cost'}\n";
 }
 
 # close table
