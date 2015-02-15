@@ -44,9 +44,6 @@ my $bot = MediaWiki::Bot->new({
 # set permissions on cookie file
 chmod 0600, $cookiefile if (-e $cookiefile);
 
-# loop for continuously running bot
-MAIN_LOOP:
-
 # get list of units
 my @unitlist = $bot->get_pages_in_category('Category:Units');
 
@@ -207,8 +204,6 @@ $bot->edit({
 
 # make hash of hashes for all skill desc and skill types, value is a counter
 my %skills;
-# old categories sometimes stick around after manual deletion, not sure if this is the fix
-undef %skills;
 foreach $unit (@unitlist) {
     if (defined $units{$unit}{'skill 1 desc'} && defined $units{$unit}{'skill 1 type'}) {
         $skills{$units{$unit}{'skill 1 desc'}}{$units{$unit}{'skill 1 type'}}++;
@@ -244,7 +239,5 @@ foreach $skilldesc (sort keys %skills) {
     });
 }
 
-# loop for continuously running bot
-print "Pass finished: " . scalar(localtime) . "\n";
-sleep 3600;
-goto MAIN_LOOP;
+# done
+print "Finished at " . scalar(localtime) . "\n";
