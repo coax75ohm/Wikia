@@ -168,7 +168,7 @@ foreach $unit (@unitlist) {
 
     # create tooltip popup if all skill 2 fields are defined
     if (defined $units{$unit}{'skill 2'} && defined $units{$unit}{'skill 2 desc'} && defined $units{$unit}{'skill 2 type'}) {
-        if (defined $units{$unit}{'skill 1 desc+'}) {
+        if (defined $units{$unit}{'skill 2 desc+'}) {
             $wikitext .= "| {{UnitListSkill | type=$units{$unit}{'skill 2 type'} | name=$units{$unit}{'skill 2'} | desc=$units{$unit}{'skill 2 desc'} | desc+=$units{$unit}{'skill 2 desc+'}}}\n";
         } else {
             $wikitext .= "| {{UnitListSkill | type=$units{$unit}{'skill 2 type'} | name=$units{$unit}{'skill 2'} | desc=$units{$unit}{'skill 2 desc'}}}\n";
