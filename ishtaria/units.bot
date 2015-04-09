@@ -4,16 +4,20 @@ use warnings;
 # don't warn on empty data fields
 no warnings 'uninitialized';
 
-# use custom version of MediaWiki::Bot
+# MediaWiki API uses ISO 8601 time format
+use DateTime::Format::ISO8601;
+
+# use custom version of MediaWiki::Bot for older MediaWiki API
 use File::Basename;
 use lib dirname (__FILE__);
 use MediaWiki::Bot;
 
-# turn on autoflush for logging
+# turn on autoflush and UTF-8 for logging
 use IO::Handle;
 autoflush STDOUT 1;
+binmode STDOUT, ':utf8';
 
-# Wikia login info
+# Wikia login info, leave password undefined to use cookie file
 my $username = "Coax75ohm";
 my $password;
 
@@ -31,6 +35,11 @@ if (! defined $password  && ! -e $cookiefile) {
     print "\n";
 }
 
+# get starting epoch time
+my $stime = time;
+
+print "Bot start time: " . scalar(localtime($stime)) . "\n";
+
 # initialize bot
 # use unsecured connection, 'cause that's all Wikia offers
 my $bot = MediaWiki::Bot->new({
@@ -44,10 +53,47 @@ my $bot = MediaWiki::Bot->new({
 # set permissions on cookie file
 chmod 0600, $cookiefile if (-e $cookiefile);
 
+# get time of last bot run if file is readable
+my $lrfile = ".lastrun";
+my ($lrtime, $LR);
+if (-e $lrfile) {
+    if (open($LR, "<$lrfile")) {
+        $lrtime = <$LR>;
+        chomp $lrtime;
+        close($LR);
+    }
+} else {
+   $lrtime = 0;
+}
+
+# get latest change in main namespace (0) or file uploads (6)
+my @latestchange = $bot->recentchanges({ ns => '0|6', limit => 1 });
+
+my ($lctime, $lcpage);
+foreach (@latestchange) {
+    $lctime = DateTime::Format::ISO8601->parse_datetime($_->{timestamp})->strftime("%s");
+    $lcpage = $_->{title};
+    print "Last edit time: " . scalar(localtime($lctime)) . "\n";
+    print "Last edit page: " . $lcpage . "\n";
+}
+
+# abort if there have been no relevant edits since last bot run
+if ($lcpage eq "Unit List" || $lrtime > $lctime) {
+    # write starting epoch time to .lastrun
+    if (open(my $LR, ">$lrfile")) {
+        print $LR $stime;
+        close($LR);
+    }
+
+    print "Nothing to do\n";
+    print "Bot finish time: " . scalar(localtime) . "\n";
+    exit;
+}
+
 # get list of units
 my @unitlist = $bot->get_pages_in_category('Category:Units');
 
-# remove subcategories and Grimoires
+# remove subcategories and Grimoires from list of units
 @unitlist = grep { ! /^Category:/ && ! /^Grimoire/ } @unitlist;
 
 # get data for each unit
@@ -86,6 +132,8 @@ foreach $unit (@unitlist) {
            elsif (/^cost\s*=\s*(\d+)/)                       { $units{$unit}{'cost'} = $1; }
            elsif (/^no evo\s*=\s*(\S+)/)                     { $units{$unit}{'no evo'} = $1; }
            elsif (/^unreleased\s*=\s*(\S+)/)                 { $units{$unit}{'unreleased'} = $1; }
+           elsif (/^illust\s*=\s*(\S.*)/)                    { $units{$unit}{'illust'} = $1; }
+           elsif (/^CV\s*=\s*(\S.*)/)                        { $units{$unit}{'CV'} = $1; }
         }
     }
 }
@@ -230,6 +278,12 @@ $bot->edit({
     minor   => 0,
 });
 
+# write starting epoch time to .lastrun in case of edits during bot run
+if (open(my $LR, ">$lrfile")) {
+    print $LR $stime;
+    close($LR);
+}
+
 # make hash of hashes for all skill desc and skill types, value is a counter
 my %skills;
 foreach $unit (@unitlist) {
@@ -267,5 +321,39 @@ foreach $skilldesc (sort keys %skills) {
     });
 }
 
+# create subcategory pages for illustrators and CVs
+my (%illust, %cv);
+foreach $unit (@unitlist) {
+    if (defined $units{$unit}{'illust'}) {
+        $illust{$units{$unit}{'illust'}}++;
+    }
+
+    if (defined $units{$unit}{'CV'}) {
+        $cv{$units{$unit}{'CV'}}++;
+    }
+}
+
+$wikitext = "[[Category:Illustrators]]\n";
+foreach (sort keys %illust) {
+    print "Editing Category:$_\n";
+    $bot->edit({
+        page    => "Category:$_",
+        text    => $wikitext,
+        summary => "update categories (bot)",
+        minor   => 0,
+    });
+}
+
+$wikitext = "[[Category:CV]]\n";
+foreach (sort keys %cv) {
+    print "Editing Category:$_\n";
+    $bot->edit({
+        page    => "Category:$_",
+        text    => $wikitext,
+        summary => "update categories (bot)",
+        minor   => 0,
+    });
+}
+
 # done
-print "Finished at " . scalar(localtime) . "\n";
+print "Bot finish time: " . scalar(localtime) . "\n";

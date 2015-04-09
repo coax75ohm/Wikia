@@ -4,6 +4,7 @@ cd "$( dirname "$0" )"
 
 while true
 do
-    ./units.bot >bot.log
-    sleep 3600
+    ./units.bot >>bot.log
+    echo >>bot.log
+    sleep 600
 done
