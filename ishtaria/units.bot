@@ -56,12 +56,10 @@ chmod 0600, $cookiefile if (-e $cookiefile);
 # get time of last bot run if file is readable
 my $lrfile = ".lastrun";
 my ($lrtime, $LR);
-if (-e $lrfile) {
-    if (open($LR, "<$lrfile")) {
-        $lrtime = <$LR>;
-        chomp $lrtime;
-        close($LR);
-    }
+if (-e $lrfile && open($LR, "<$lrfile")) {
+    $lrtime = <$LR>;
+    chomp $lrtime;
+    close($LR);
 } else {
    $lrtime = 0;
 }
@@ -132,8 +130,8 @@ foreach $unit (@unitlist) {
            elsif (/^cost\s*=\s*(\d+)/)                       { $units{$unit}{'cost'} = $1; }
            elsif (/^no evo\s*=\s*(\S+)/)                     { $units{$unit}{'no evo'} = $1; }
            elsif (/^unreleased\s*=\s*(\S+)/)                 { $units{$unit}{'unreleased'} = $1; }
-           elsif (/^illust\s*=\s*(\S.*)/)                    { $units{$unit}{'illust'} = $1; }
-           elsif (/^CV\s*=\s*(\S.*)/)                        { $units{$unit}{'CV'} = $1; }
+           elsif (/^illust\s*=\s*(\S.*\S)/)                  { $units{$unit}{'illust'} = $1; }
+           elsif (/^CV\s*=\s*(\S.*\S)/)                      { $units{$unit}{'CV'} = $1; }
         }
     }
 }
