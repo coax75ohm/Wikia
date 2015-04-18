@@ -50,6 +50,12 @@ my $bot = MediaWiki::Bot->new({
     login_data => { username => $username, password => $password },
 });
 
+# check if logged in
+if (! defined $bot) {
+    print "Could not login to Wikia\n";
+    exit;
+}
+
 # set permissions on cookie file
 chmod 0600, $cookiefile if (-e $cookiefile);
 
@@ -61,7 +67,7 @@ if (-e $lrfile && open($LR, "<$lrfile")) {
     chomp $lrtime;
     close($LR);
 } else {
-   $lrtime = 0;
+    $lrtime = 0;
 }
 
 # get latest change in main namespace (0) or file uploads (6)
@@ -102,36 +108,40 @@ foreach $unit (@unitlist) {
     if (defined $wikitext) {
         # loop over each line
         foreach (split(/\n/, $wikitext)) {
-           # strip off any leading whitespace and pipe
-           s/^\s*\|\s*//;
+            # strip off any leading whitespace and pipe
+            s/^\s*\|\s*//;
 
-           # pull out required data fields
-           if    (/^rarity\s*=\s*(\d+)/)                     { $units{$unit}{'rarity'} = $1; }
-           elsif (/^type\s*=\s*(\w+)/)                       { $units{$unit}{'type'} = ucfirst $1; }
-           elsif (/^element\s*=\s*(\w+)/)                    { $units{$unit}{'element'} = ucfirst $1; }
-           # gender is lowercase because it's used as a class for the javascript filter
-           elsif (/^gender\s*=\s*(\w+)/)                     { $units{$unit}{'gender'} = lcfirst $1; }
-           elsif (/^skill 1\s*=\s*(\w[\w\s'&-]*[\w!])/)      { $units{$unit}{'skill 1'} = $1; }
-           elsif (/^skill 1 type\s*=\s*(\w+)/)               { $units{$unit}{'skill 1 type'} = ucfirst $1; }
-           elsif (/^skill 1 desc\s*=\s*(\w[\w\s'&-]*\w)/)    { $units{$unit}{'skill 1 desc'} = $1; }
-           elsif (/^skill 1 desc\+\s*=\s*(\w[\w\s'&-]*\w)/)  { $units{$unit}{'skill 1 desc+'} = $1; }
-           elsif (/^skill 1 proc\s*=\s*(\d+)/)               { $units{$unit}{'skill 1 proc'} = $1; }
-           elsif (/^skill 2\s*=\s*(\w[\w\s'&-]*[\w!])/)      { $units{$unit}{'skill 2'} = $1; }
-           elsif (/^skill 2 type\s*=\s*(\w+)/      )         { $units{$unit}{'skill 2 type'} = ucfirst $1; }
-           elsif (/^skill 2 desc\s*=\s*(\w[\w\s'&-]*\w)/)    { $units{$unit}{'skill 2 desc'} = $1; }
-           elsif (/^skill 2 desc\+\s*=\s*(\w[\w\s'&-]*\w)/)  { $units{$unit}{'skill 2 desc+'} = $1; }
-           elsif (/^skill 2 proc\s*=\s*(\d+)/)               { $units{$unit}{'skill 2 proc'} = $1; }
-           elsif (/^atk 0\s*=\s*(\d+)/)                      { $units{$unit}{'atk 0'} = $1; }
-           elsif (/^atk 1\s*=\s*(\d+)/)                      { $units{$unit}{'atk 1'} = $1; }
-           elsif (/^atk 2\s*=\s*(\d+)/)                      { $units{$unit}{'atk 2'} = $1; }
-           elsif (/^hp 0\s*=\s*(\d+)/)                       { $units{$unit}{'hp 0'} = $1; }
-           elsif (/^hp 1\s*=\s*(\d+)/)                       { $units{$unit}{'hp 1'} = $1; }
-           elsif (/^hp 2\s*=\s*(\d+)/)                       { $units{$unit}{'hp 2'} = $1; }
-           elsif (/^cost\s*=\s*(\d+)/)                       { $units{$unit}{'cost'} = $1; }
-           elsif (/^no evo\s*=\s*(\S+)/)                     { $units{$unit}{'no evo'} = $1; }
-           elsif (/^unreleased\s*=\s*(\S+)/)                 { $units{$unit}{'unreleased'} = $1; }
-           elsif (/^illust\s*=\s*(\S.*\S)/)                  { $units{$unit}{'illust'} = $1; }
-           elsif (/^CV\s*=\s*(\S.*\S)/)                      { $units{$unit}{'CV'} = $1; }
+            # pull out required data fields
+            if    (/^rarity\s*=\s*(\d+)/)                     { $units{$unit}{'rarity'} = $1; }
+            elsif (/^type\s*=\s*(\w+)/)                       { $units{$unit}{'type'} = ucfirst $1; }
+            elsif (/^element\s*=\s*(\w+)/)                    { $units{$unit}{'element'} = ucfirst $1; }
+            # gender is lowercase because it's used as a class for the javascript filter
+            elsif (/^gender\s*=\s*(\w+)/)                     { $units{$unit}{'gender'} = lcfirst $1; }
+            elsif (/^skill 1\s*=\s*(\w[\w\s'&-]*[\w!])/)      { $units{$unit}{'skill 1'} = $1; }
+            elsif (/^skill 1 type\s*=\s*(\w+)/)               { $units{$unit}{'skill 1 type'} = ucfirst $1; }
+            elsif (/^skill 1 desc\s*=\s*(\w[\w\s'&-]*\w)/)    { $units{$unit}{'skill 1 desc'} = $1; }
+            elsif (/^skill 1 desc\+\s*=\s*(\w[\w\s'&-]*\w)/)  { $units{$unit}{'skill 1 desc+'} = $1; }
+            elsif (/^skill 1 proc\s*=\s*(\d+)/)               { $units{$unit}{'skill 1 proc'} = $1; }
+            elsif (/^skill 2\s*=\s*(\w[\w\s'&-]*[\w!])/)      { $units{$unit}{'skill 2'} = $1; }
+            elsif (/^skill 2 type\s*=\s*(\w+)/      )         { $units{$unit}{'skill 2 type'} = ucfirst $1; }
+            elsif (/^skill 2 desc\s*=\s*(\w[\w\s'&-]*\w)/)    { $units{$unit}{'skill 2 desc'} = $1; }
+            elsif (/^skill 2 desc\+\s*=\s*(\w[\w\s'&-]*\w)/)  { $units{$unit}{'skill 2 desc+'} = $1; }
+            elsif (/^skill 2 proc\s*=\s*(\d+)/)               { $units{$unit}{'skill 2 proc'} = $1; }
+            elsif (/^atk 0\s*=\s*(\d+)/)                      { $units{$unit}{'atk 0'} = $1; }
+            elsif (/^atk 1\s*=\s*(\d+)/)                      { $units{$unit}{'atk 1'} = $1; }
+            elsif (/^atk 2\s*=\s*(\d+)/)                      { $units{$unit}{'atk 2'} = $1; }
+            elsif (/^atk 3\s*=\s*(\d+)/)                      { $units{$unit}{'atk 3'} = $1; }
+            elsif (/^atk 4\s*=\s*(\d+)/)                      { $units{$unit}{'atk 4'} = $1; }
+            elsif (/^hp 0\s*=\s*(\d+)/)                       { $units{$unit}{'hp 0'} = $1; }
+            elsif (/^hp 1\s*=\s*(\d+)/)                       { $units{$unit}{'hp 1'} = $1; }
+            elsif (/^hp 2\s*=\s*(\d+)/)                       { $units{$unit}{'hp 2'} = $1; }
+            elsif (/^hp 3\s*=\s*(\d+)/)                       { $units{$unit}{'hp 3'} = $1; }
+            elsif (/^hp 4\s*=\s*(\d+)/)                       { $units{$unit}{'hp 4'} = $1; }
+            elsif (/^cost\s*=\s*(\d+)/)                       { $units{$unit}{'cost'} = $1; }
+            elsif (/^max evo\s*=\s*(\d+)/)                    { $units{$unit}{'max evo'} = $1; }
+            elsif (/^unreleased\s*=\s*(\S+)/)                 { $units{$unit}{'unreleased'} = $1; }
+            elsif (/^illust\s*=\s*(\S.*\S)/)                  { $units{$unit}{'illust'} = $1; }
+            elsif (/^CV\s*=\s*(\S.*\S)/)                      { $units{$unit}{'CV'} = $1; }
         }
     }
 }
@@ -155,12 +165,9 @@ $wikitext .= "! class=\"unsortable\"| Skill 1\n";
 $wikitext .= "! class=\"unfilterable\" data-sort-type=\"number\"| Skill 1 %\n";
 $wikitext .= "! class=\"unsortable\"| Skill 2\n";
 $wikitext .= "! class=\"unfilterable\" data-sort-type=\"number\"| Skill 2 %\n";
-$wikitext .= "! class=\"unfilterable\" data-sort-type=\"number\"| ATK\n";
-$wikitext .= "! class=\"unfilterable\" data-sort-type=\"number\"| ATK +1\n";
-$wikitext .= "! class=\"unfilterable\" data-sort-type=\"number\"| ATK +2\n";
-$wikitext .= "! class=\"unfilterable\" data-sort-type=\"number\"| HP\n";
-$wikitext .= "! class=\"unfilterable\" data-sort-type=\"number\"| HP +1\n";
-$wikitext .= "! class=\"unfilterable\" data-sort-type=\"number\"| HP +2\n";
+$wikitext .= "! class=\"unfilterable\" data-sort-type=\"number\"| Max Evo\n";
+$wikitext .= "! class=\"unfilterable\" data-sort-type=\"number\"| Max ATK\n";
+$wikitext .= "! class=\"unfilterable\" data-sort-type=\"number\"| Max HP\n";
 $wikitext .= "! class=\"unfilterable\" data-sort-type=\"number\"| Cost\n";
 
 # make table row for each unit
@@ -210,7 +217,7 @@ foreach $unit (@unitlist) {
     if ($units{$unit}{'rarity'} < 3 && ! defined $units{$unit}{'skill 1 type'}) {
         $wikitext .= "| class=\"center\"| -\n";
     } else {
-        $wikitext .= "| class=\"right\"| $units{$unit}{'skill 1 proc'}\n";
+        $wikitext .= "| class=\"center\"| $units{$unit}{'skill 1 proc'}\n";
     }
 
     # create tooltip popup if all skill 2 fields are defined
@@ -232,32 +239,22 @@ foreach $unit (@unitlist) {
     if ($units{$unit}{'rarity'} < 3 && ! defined $units{$unit}{'skill 2 type'}) {
         $wikitext .= "| class=\"center\"| -\n";
     } else {
-        $wikitext .= "| class=\"right\"| $units{$unit}{'skill 2 proc'}\n";
+        $wikitext .= "| class=\"center\"| $units{$unit}{'skill 2 proc'}\n";
     }
+
+    # max evo
+    $wikitext .= "| class=\"center\"| $units{$unit}{'max evo'}\n";
 
     # ATK
-    $wikitext .= "| class=\"atk right\"| $units{$unit}{'atk 0'}\n";
-    # add dash for ATK +1 and +2 for 1 and 2 star units plus no evo
-    if ($units{$unit}{'rarity'} < 3 || $units{$unit}{'no evo'}) {
-        $wikitext .= "| class=\"atk center\"| -\n";
-        $wikitext .= "| class=\"atk center\"| -\n";
-    } else {
-        $wikitext .= "| class=\"atk right\"| $units{$unit}{'atk 1'}\n";
-        $wikitext .= "| class=\"atk right\"| $units{$unit}{'atk 2'}\n";
-    }
+    my $atk = 'atk ' . $units{$unit}{'max evo'};
+    $wikitext .= "| class=\"atk center\"| $units{$unit}{$atk}\n";
 
     # HP
-    $wikitext .= "| class=\"hp right\"| $units{$unit}{'hp 0'}\n";
-    # add dash for HP +1 and +2 for 1 and 2 star units plus no evo
-    if ($units{$unit}{'rarity'} < 3 || $units{$unit}{'no evo'}) {
-        $wikitext .= "| class=\"hp center\"| -\n";
-        $wikitext .= "| class=\"hp center\"| -\n";
-    } else {
-        $wikitext .= "| class=\"hp right\"| $units{$unit}{'hp 1'}\n";
-        $wikitext .= "| class=\"hp right\"| $units{$unit}{'hp 2'}\n";
-    }
+    my $hp = 'hp ' . $units{$unit}{'max evo'};
+    $wikitext .= "| class=\"hp center\"| $units{$unit}{$hp}\n";
 
-    $wikitext .= "| class=\"right\"| $units{$unit}{'cost'}\n";
+    # cost
+    $wikitext .= "| class=\"center\"| $units{$unit}{'cost'}\n";
 }
 
 # close table
