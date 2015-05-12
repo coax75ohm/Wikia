@@ -146,12 +146,8 @@ foreach $unit (@unitlist) {
     }
 }
 
-# create wikitext for Unit_List page
-my $wikitext = "<div class=\"mw-collapsible mw-collapsed\">\n";
-$wikitext .= "'''Note'''\n";
-$wikitext .= "<div class=\"mw-collapsible-content\">\n";
-$wikitext .= "{{Warning|info=This is a bot generated page. If you notice any missing or incorrect data, please edit the corresponding unit page and it will be updated here next time the bot runs.}}\n";
-$wikitext .= "</div></div>\n";
+# create wikitext for Unit List page
+my $wikitext = "{{Warning|info=This is a bot generated page. If you notice any missing or incorrect data, please edit the corresponding unit page and it will be updated here next time the bot runs.}}\n";
 
 # make table header
 $wikitext .= "{| class=\"wikitable filterable sortable\"\n";
@@ -264,10 +260,10 @@ $wikitext .= "|}\n";
 $wikitext .= "\n";
 $wikitext .= "[[Category:Gameplay & Mechanics]]\n";
 
-# upload new Unit_List page, won't do anything if the text wasn't changed (null edit)
-print "Editing Unit_List\n";
+# upload new Unit List page, won't do anything if the text wasn't changed (null edit)
+print "Editing Unit List\n";
 $bot->edit({
-    page    => "Unit_List",
+    page    => "Unit List",
     text    => $wikitext,
     summary => "update data (bot)",
     minor   => 0,
