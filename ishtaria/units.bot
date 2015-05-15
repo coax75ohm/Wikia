@@ -150,7 +150,7 @@ foreach $unit (@unitlist) {
 my $wikitext = "{{Warning|info=This is a bot generated page. If you notice any missing or incorrect data, please edit the corresponding unit page and it will be updated here next time the bot runs.}}\n";
 
 # make table header
-$wikitext .= "{| class=\"wikitable filterable sortable\"\n";
+$wikitext .= "{| class=\"wikitable filterable sortable center\"\n";
 $wikitext .= "|-\n";
 $wikitext .= "! class=\"unsortable\"| Image\n";
 $wikitext .= "! class=\"unfilterable\"| Name\n";
@@ -189,68 +189,68 @@ foreach $unit (@unitlist) {
         }
     }
 
-    $wikitext .= "| [[$unit]]\n";
-    $wikitext .= "| class=\"center\"| $units{$unit}{'rarity'}\n";
-    $wikitext .= "| $units{$unit}{'type'}\n";
-    $wikitext .= "| $units{$unit}{'element'}\n";
+    $wikitext .= "| class=\"left\"| [[$unit]]\n";
+    $wikitext .= "| $units{$unit}{'rarity'}\n";
+    $wikitext .= "| class=\"left\"| $units{$unit}{'type'}\n";
+    $wikitext .= "| class=\"left\"| $units{$unit}{'element'}\n";
 
     # create tooltip popup if all skill 1 fields are defined
     if (defined $units{$unit}{'skill 1'} && defined $units{$unit}{'skill 1 desc'} && defined $units{$unit}{'skill 1 type'}) {
         if (defined $units{$unit}{'skill 1 desc+'}) {
-            $wikitext .= "| {{UnitListSkill | type=$units{$unit}{'skill 1 type'} | name=$units{$unit}{'skill 1'} | desc=$units{$unit}{'skill 1 desc'} | desc+=$units{$unit}{'skill 1 desc+'}}}\n";
+            $wikitext .= "| class=\"left\"| {{UnitListSkill | type=$units{$unit}{'skill 1 type'} | name=$units{$unit}{'skill 1'} | desc=$units{$unit}{'skill 1 desc'} | desc+=$units{$unit}{'skill 1 desc+'}}}\n";
         } else {
-            $wikitext .= "| {{UnitListSkill | type=$units{$unit}{'skill 1 type'} | name=$units{$unit}{'skill 1'} | desc=$units{$unit}{'skill 1 desc'}}}\n";
+            $wikitext .= "| class=\"left\"| {{UnitListSkill | type=$units{$unit}{'skill 1 type'} | name=$units{$unit}{'skill 1'} | desc=$units{$unit}{'skill 1 desc'}}}\n";
         }
     # add dash for 1 and 2 star units if they have no skill 1
     } elsif ($units{$unit}{'rarity'} < 3 && ! defined $units{$unit}{'skill 1 type'}) {
-        $wikitext .= "| class=\"center\"| -\n";
+        $wikitext .= "| -\n";
     } else {
-        $wikitext .= "| $units{$unit}{'skill 1 type'}\n";
+        $wikitext .= "| class=\"left\"| $units{$unit}{'skill 1 type'}\n";
     }
 
     # skill 1 proc %
     # add dash for 1 and 2 star units if they have no skill 1
     if ($units{$unit}{'rarity'} < 3 && ! defined $units{$unit}{'skill 1 type'}) {
-        $wikitext .= "| class=\"center\"| -\n";
+        $wikitext .= "| -\n";
     } else {
-        $wikitext .= "| class=\"center\"| $units{$unit}{'skill 1 proc'}\n";
+        $wikitext .= "| $units{$unit}{'skill 1 proc'}\n";
     }
 
     # create tooltip popup if all skill 2 fields are defined
     if (defined $units{$unit}{'skill 2'} && defined $units{$unit}{'skill 2 desc'} && defined $units{$unit}{'skill 2 type'}) {
         if (defined $units{$unit}{'skill 2 desc+'}) {
-            $wikitext .= "| {{UnitListSkill | type=$units{$unit}{'skill 2 type'} | name=$units{$unit}{'skill 2'} | desc=$units{$unit}{'skill 2 desc'} | desc+=$units{$unit}{'skill 2 desc+'}}}\n";
+            $wikitext .= "| class=\"left\"| {{UnitListSkill | type=$units{$unit}{'skill 2 type'} | name=$units{$unit}{'skill 2'} | desc=$units{$unit}{'skill 2 desc'} | desc+=$units{$unit}{'skill 2 desc+'}}}\n";
         } else {
-            $wikitext .= "| {{UnitListSkill | type=$units{$unit}{'skill 2 type'} | name=$units{$unit}{'skill 2'} | desc=$units{$unit}{'skill 2 desc'}}}\n";
+            $wikitext .= "| class=\"left\"| {{UnitListSkill | type=$units{$unit}{'skill 2 type'} | name=$units{$unit}{'skill 2'} | desc=$units{$unit}{'skill 2 desc'}}}\n";
         }
     # add dash for 1 and 2 star units if they have no skill 2 (none do, but put this here anyway)
     } elsif ($units{$unit}{'rarity'} < 3 && ! defined $units{$unit}{'skill 2 type'}) {
-        $wikitext .= "| class=\"center\"| -\n";
+        $wikitext .= "| -\n";
     } else {
-        $wikitext .= "| $units{$unit}{'skill 2 type'}\n";
+        $wikitext .= "| class=\"left\"| $units{$unit}{'skill 2 type'}\n";
     }
     
     # skill 2 proc %
     # add dash for 1 and 2 star units if they have no skill 2 (none do, but put this here anyway)
     if ($units{$unit}{'rarity'} < 3 && ! defined $units{$unit}{'skill 2 type'}) {
-        $wikitext .= "| class=\"center\"| -\n";
+        $wikitext .= "| -\n";
     } else {
-        $wikitext .= "| class=\"center\"| $units{$unit}{'skill 2 proc'}\n";
+        $wikitext .= "| $units{$unit}{'skill 2 proc'}\n";
     }
 
     # max evo
-    $wikitext .= "| class=\"center\"| $units{$unit}{'max evo'}\n";
+    $wikitext .= "| $units{$unit}{'max evo'}\n";
 
     # ATK
     my $atk = 'atk ' . $units{$unit}{'max evo'};
-    $wikitext .= "| class=\"atk center\"| $units{$unit}{$atk}\n";
+    $wikitext .= "| class=\"atk\"| $units{$unit}{$atk}\n";
 
     # HP
     my $hp = 'hp ' . $units{$unit}{'max evo'};
-    $wikitext .= "| class=\"hp center\"| $units{$unit}{$hp}\n";
+    $wikitext .= "| class=\"hp\"| $units{$unit}{$hp}\n";
 
     # cost
-    $wikitext .= "| class=\"center\"| $units{$unit}{'cost'}\n";
+    $wikitext .= "| $units{$unit}{'cost'}\n";
 }
 
 # close table
