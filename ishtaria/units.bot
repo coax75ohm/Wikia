@@ -106,6 +106,18 @@ foreach $unit (@unitlist) {
     # get page for unit
     my $wikitext = $bot->get_text($unit);
     if (defined $wikitext) {
+        # add __NOWYSIWYG__ to unit page if not already present
+        if ($wikitext !~ /__NOWYSIWYG__/) {
+            $wikitext .= "\n__NOWYSIWYG__\n";
+            print "Editing $unit\n";
+            $bot->edit({
+                page    => $unit,
+                text    => $wikitext,
+                summary => "add __NOWYSIWYG__ (bot)",
+                minor   => 1,
+            });
+        }
+
         # loop over each line
         foreach (split(/\n/, $wikitext)) {
             # strip off any leading whitespace and pipe
@@ -326,24 +338,30 @@ foreach $unit (@unitlist) {
 
 $wikitext = "[[Category:Illustrators]]\n";
 foreach (sort keys %illust) {
-    print "Editing Category:$_\n";
-    $bot->edit({
-        page    => "Category:$_",
-        text    => $wikitext,
-        summary => "update categories (bot)",
-        minor   => 0,
-    });
+    my $pageid = $bot->get_id("Category:$_");
+    if (!defined $pageid) {
+        print "Editing Category:$_\n";
+        $bot->edit({
+            page    => "Category:$_",
+            text    => $wikitext,
+            summary => "update categories (bot)",
+            minor   => 0,
+        });
+    }
 }
 
 $wikitext = "[[Category:CV]]\n";
 foreach (sort keys %cv) {
-    print "Editing Category:$_\n";
-    $bot->edit({
-        page    => "Category:$_",
-        text    => $wikitext,
-        summary => "update categories (bot)",
-        minor   => 0,
-    });
+    my $pageid = $bot->get_id("Category:$_");
+    if (!defined $pageid) {
+        print "Editing Category:$_\n";
+        $bot->edit({
+            page    => "Category:$_",
+            text    => $wikitext,
+            summary => "update categories (bot)",
+            minor   => 0,
+        });
+    }
 }
 
 # done
