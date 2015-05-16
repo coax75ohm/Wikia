@@ -139,6 +139,7 @@ foreach $unit (@unitlist) {
             elsif (/^skill 2 desc\s*=\s*(\w[\w\s'&-]*\w)/)    { $units{$unit}{'skill 2 desc'} = $1; }
             elsif (/^skill 2 desc\+\s*=\s*(\w[\w\s'&-]*\w)/)  { $units{$unit}{'skill 2 desc+'} = $1; }
             elsif (/^skill 2 proc\s*=\s*(\d+)/)               { $units{$unit}{'skill 2 proc'} = $1; }
+            elsif (/^ability\s*=\s*(\w[\w\s'&-]*\w)/)         { $units{$unit}{'ability'} = $1; }
             elsif (/^atk 0\s*=\s*(\d+)/)                      { $units{$unit}{'atk 0'} = $1; }
             elsif (/^atk 1\s*=\s*(\d+)/)                      { $units{$unit}{'atk 1'} = $1; }
             elsif (/^atk 2\s*=\s*(\d+)/)                      { $units{$unit}{'atk 2'} = $1; }
@@ -173,6 +174,7 @@ $wikitext .= "! class=\"unsortable\"| Skill 1\n";
 $wikitext .= "! class=\"unfilterable\" data-sort-type=\"number\"| Skill 1 %\n";
 $wikitext .= "! class=\"unsortable\"| Skill 2\n";
 $wikitext .= "! class=\"unfilterable\" data-sort-type=\"number\"| Skill 2 %\n";
+$wikitext .= "! class=\"unsortable\"| Ability\n";
 $wikitext .= "! class=\"unfilterable\" data-sort-type=\"number\"| Max Evo\n";
 $wikitext .= "! class=\"unfilterable\" data-sort-type=\"number\"| Max ATK\n";
 $wikitext .= "! class=\"unfilterable\" data-sort-type=\"number\"| Max HP\n";
@@ -248,6 +250,16 @@ foreach $unit (@unitlist) {
         $wikitext .= "| -\n";
     } else {
         $wikitext .= "| $units{$unit}{'skill 2 proc'}\n";
+    }
+
+    # ability
+    if (! defined $units{$unit}{'ability'}) {
+        $wikitext .= "| -\n";
+    } else {
+        # stript trailing roman numerals from ability, otherwise filter list too long
+        my $ability = $units{$unit}{'ability'};
+        $ability =~ s/\sI+$//;
+        $wikitext .= "| class=\"left\"| $ability\n";
     }
 
     # max evo
