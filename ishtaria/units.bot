@@ -270,7 +270,7 @@ $wikitext .= "|}\n";
 
 # add category
 $wikitext .= "\n";
-$wikitext .= "[[Category:Gameplay & Mechanics]]\n";
+$wikitext .= "[[Category:Gameplay & Mechanics]]";
 
 # upload new Unit List page, won't do anything if the text wasn't changed (null edit)
 print "Editing Unit List\n";
@@ -292,11 +292,11 @@ my %skills;
 foreach $unit (@unitlist) {
     if (defined $units{$unit}{'skill 1 desc'} && defined $units{$unit}{'skill 1 type'}) {
         $skills{$units{$unit}{'skill 1 desc'}}{$units{$unit}{'skill 1 type'}}++;
-        print "$unit skill 1: $units{$unit}{'skill 1 type'} - $units{$unit}{'skill 1 desc'}\n"; 
+        #print "$unit skill 1: $units{$unit}{'skill 1 type'} - $units{$unit}{'skill 1 desc'}\n"; 
     }
     if (defined $units{$unit}{'skill 2 desc'} && defined $units{$unit}{'skill 2 type'}) {
         $skills{$units{$unit}{'skill 2 desc'}}{$units{$unit}{'skill 2 type'}}++;
-        print "$unit skill 2: $units{$unit}{'skill 2 type'} - $units{$unit}{'skill 2 desc'}\n"; 
+        #print "$unit skill 2: $units{$unit}{'skill 2 type'} - $units{$unit}{'skill 2 desc'}\n"; 
     }
 }
 
@@ -313,15 +313,18 @@ foreach $skilldesc (sort keys %skills) {
     foreach $skilltype (sort keys %{$skills{$skilldesc}}) {
         $wikitext .= "[[Category:$skilltype]]\n";    
     }
-    $wikitext .= "[[Category:Skill Descriptions]]\n";
+    $wikitext .= "[[Category:Skill Descriptions]]";
 
-    print "Editing Category:$skilldesc\n";
-    $bot->edit({
-        page    => "Category:$skilldesc",
-        text    => $wikitext,
-        summary => "update categories (bot)",
-        minor   => 0,
-    });
+    my $cwikitext = $bot->get_text("Category:$skilldesc");
+    if ($cwikitext ne $wikitext) {
+        print "Editing Category:$skilldesc\n";
+        $bot->edit({
+            page    => "Category:$skilldesc",
+            text    => $wikitext,
+            summary => "update categories (bot)",
+            minor   => 0,
+        });
+    }
 }
 
 # create subcategory pages for illustrators and CVs
@@ -336,7 +339,7 @@ foreach $unit (@unitlist) {
     }
 }
 
-$wikitext = "[[Category:Illustrators]]\n";
+$wikitext = "[[Category:Illustrators]]";
 foreach (sort keys %illust) {
     my $pageid = $bot->get_id("Category:$_");
     if (!defined $pageid) {
@@ -350,7 +353,7 @@ foreach (sort keys %illust) {
     }
 }
 
-$wikitext = "[[Category:CV]]\n";
+$wikitext = "[[Category:CV]]";
 foreach (sort keys %cv) {
     my $pageid = $bot->get_id("Category:$_");
     if (!defined $pageid) {
