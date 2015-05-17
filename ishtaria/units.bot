@@ -17,6 +17,9 @@ use IO::Handle;
 autoflush STDOUT 1;
 binmode STDOUT, ':utf8';
 
+# set to nonzero to override edit history checking
+my $FORCE = 0;
+
 # Wikia login info, leave password undefined to use cookie file
 my $username = "Coax75ohm";
 my $password;
@@ -82,6 +85,7 @@ foreach (@latestchange) {
 }
 
 # abort if there have been no relevant edits since last bot run
+goto DOIT if $FORCE;
 if ($lcpage eq "Unit List" || $lrtime > $lctime) {
     # write starting epoch time to .lastrun
     if (open(my $LR, ">$lrfile")) {
@@ -93,6 +97,7 @@ if ($lcpage eq "Unit List" || $lrtime > $lctime) {
     print "Bot finish time: " . scalar(localtime) . "\n";
     exit;
 }
+DOIT:
 
 # get list of units
 my @unitlist = $bot->get_pages_in_category('Category:Units');
@@ -205,21 +210,21 @@ foreach $unit (@unitlist) {
 
     $wikitext .= "| class=\"left\"| [[$unit]]\n";
     $wikitext .= "| $units{$unit}{'rarity'}\n";
-    $wikitext .= "| class=\"left\"| $units{$unit}{'type'}\n";
-    $wikitext .= "| class=\"left\"| $units{$unit}{'element'}\n";
+    $wikitext .= "| $units{$unit}{'type'}\n";
+    $wikitext .= "| $units{$unit}{'element'}\n";
 
     # create tooltip popup if all skill 1 fields are defined
     if (defined $units{$unit}{'skill 1'} && defined $units{$unit}{'skill 1 desc'} && defined $units{$unit}{'skill 1 type'}) {
         if (defined $units{$unit}{'skill 1 desc+'}) {
-            $wikitext .= "| class=\"left\"| {{UnitListSkill | type=$units{$unit}{'skill 1 type'} | name=$units{$unit}{'skill 1'} | desc=$units{$unit}{'skill 1 desc'} | desc+=$units{$unit}{'skill 1 desc+'}}}\n";
+            $wikitext .= "| {{UnitListSkill | type=$units{$unit}{'skill 1 type'} | name=$units{$unit}{'skill 1'} | desc=$units{$unit}{'skill 1 desc'} | desc+=$units{$unit}{'skill 1 desc+'}}}\n";
         } else {
-            $wikitext .= "| class=\"left\"| {{UnitListSkill | type=$units{$unit}{'skill 1 type'} | name=$units{$unit}{'skill 1'} | desc=$units{$unit}{'skill 1 desc'}}}\n";
+            $wikitext .= "| {{UnitListSkill | type=$units{$unit}{'skill 1 type'} | name=$units{$unit}{'skill 1'} | desc=$units{$unit}{'skill 1 desc'}}}\n";
         }
     # add dash for 1 and 2 star units if they have no skill 1
     } elsif ($units{$unit}{'rarity'} < 3 && ! defined $units{$unit}{'skill 1 type'}) {
         $wikitext .= "| -\n";
     } else {
-        $wikitext .= "| class=\"left\"| $units{$unit}{'skill 1 type'}\n";
+        $wikitext .= "| $units{$unit}{'skill 1 type'}\n";
     }
 
     # skill 1 proc %
@@ -233,15 +238,15 @@ foreach $unit (@unitlist) {
     # create tooltip popup if all skill 2 fields are defined
     if (defined $units{$unit}{'skill 2'} && defined $units{$unit}{'skill 2 desc'} && defined $units{$unit}{'skill 2 type'}) {
         if (defined $units{$unit}{'skill 2 desc+'}) {
-            $wikitext .= "| class=\"left\"| {{UnitListSkill | type=$units{$unit}{'skill 2 type'} | name=$units{$unit}{'skill 2'} | desc=$units{$unit}{'skill 2 desc'} | desc+=$units{$unit}{'skill 2 desc+'}}}\n";
+            $wikitext .= "| {{UnitListSkill | type=$units{$unit}{'skill 2 type'} | name=$units{$unit}{'skill 2'} | desc=$units{$unit}{'skill 2 desc'} | desc+=$units{$unit}{'skill 2 desc+'}}}\n";
         } else {
-            $wikitext .= "| class=\"left\"| {{UnitListSkill | type=$units{$unit}{'skill 2 type'} | name=$units{$unit}{'skill 2'} | desc=$units{$unit}{'skill 2 desc'}}}\n";
+            $wikitext .= "| {{UnitListSkill | type=$units{$unit}{'skill 2 type'} | name=$units{$unit}{'skill 2'} | desc=$units{$unit}{'skill 2 desc'}}}\n";
         }
     # add dash for 1 and 2 star units if they have no skill 2 (none do, but put this here anyway)
     } elsif ($units{$unit}{'rarity'} < 3 && ! defined $units{$unit}{'skill 2 type'}) {
         $wikitext .= "| -\n";
     } else {
-        $wikitext .= "| class=\"left\"| $units{$unit}{'skill 2 type'}\n";
+        $wikitext .= "| $units{$unit}{'skill 2 type'}\n";
     }
     
     # skill 2 proc %
@@ -259,7 +264,7 @@ foreach $unit (@unitlist) {
         # stript trailing roman numerals from ability, otherwise filter list too long
         my $ability = $units{$unit}{'ability'};
         $ability =~ s/\sI+$//;
-        $wikitext .= "| class=\"left\"| $ability\n";
+        $wikitext .= "| $ability\n";
     }
 
     # max evo
