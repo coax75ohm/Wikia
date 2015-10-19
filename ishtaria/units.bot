@@ -129,37 +129,37 @@ foreach $unit (@unitlist) {
             s/^\s*\|\s*//;
 
             # pull out required data fields
-            if    (/^rarity\s*=\s*(\d+)/)                     { $units{$unit}{'rarity'} = $1; }
-            elsif (/^type\s*=\s*(\w+)/)                       { $units{$unit}{'type'} = ucfirst $1; }
-            elsif (/^element\s*=\s*(\w+)/)                    { $units{$unit}{'element'} = ucfirst $1; }
+            if    (/^rarity\s*=\s*(\d+)/)                       { $units{$unit}{'rarity'} = $1; }
+            elsif (/^type\s*=\s*(\w+)/)                         { $units{$unit}{'type'} = ucfirst $1; }
+            elsif (/^element\s*=\s*(\w+)/)                      { $units{$unit}{'element'} = ucfirst $1; }
             # gender is lowercase because it's used as a class for the javascript filter
-            elsif (/^gender\s*=\s*(\w+)/)                     { $units{$unit}{'gender'} = lcfirst $1; }
-            elsif (/^skill 1\s*=\s*(\w[\w\s'&-]*[\w!])/)      { $units{$unit}{'skill 1'} = $1; }
-            elsif (/^skill 1 type\s*=\s*(\w+)/)               { $units{$unit}{'skill 1 type'} = ucfirst $1; }
-            elsif (/^skill 1 desc\s*=\s*(\w[\w\s'&-]*\w)/)    { $units{$unit}{'skill 1 desc'} = $1; }
-            elsif (/^skill 1 desc\+\s*=\s*(\w[\w\s'&-]*\w)/)  { $units{$unit}{'skill 1 desc+'} = $1; }
-            elsif (/^skill 1 proc\s*=\s*(\d+)/)               { $units{$unit}{'skill 1 proc'} = $1; }
-            elsif (/^skill 2\s*=\s*(\w[\w\s'&-]*[\w!])/)      { $units{$unit}{'skill 2'} = $1; }
-            elsif (/^skill 2 type\s*=\s*(\w+)/      )         { $units{$unit}{'skill 2 type'} = ucfirst $1; }
-            elsif (/^skill 2 desc\s*=\s*(\w[\w\s'&-]*\w)/)    { $units{$unit}{'skill 2 desc'} = $1; }
-            elsif (/^skill 2 desc\+\s*=\s*(\w[\w\s'&-]*\w)/)  { $units{$unit}{'skill 2 desc+'} = $1; }
-            elsif (/^skill 2 proc\s*=\s*(\d+)/)               { $units{$unit}{'skill 2 proc'} = $1; }
-            elsif (/^ability\s*=\s*(\w[\w\s'&-]*\w)/)         { $units{$unit}{'ability'} = $1; }
-            elsif (/^atk 0\s*=\s*(\d+)/)                      { $units{$unit}{'atk 0'} = $1; }
-            elsif (/^atk 1\s*=\s*(\d+)/)                      { $units{$unit}{'atk 1'} = $1; }
-            elsif (/^atk 2\s*=\s*(\d+)/)                      { $units{$unit}{'atk 2'} = $1; }
-            elsif (/^atk 3\s*=\s*(\d+)/)                      { $units{$unit}{'atk 3'} = $1; }
-            elsif (/^atk 4\s*=\s*(\d+)/)                      { $units{$unit}{'atk 4'} = $1; }
-            elsif (/^hp 0\s*=\s*(\d+)/)                       { $units{$unit}{'hp 0'} = $1; }
-            elsif (/^hp 1\s*=\s*(\d+)/)                       { $units{$unit}{'hp 1'} = $1; }
-            elsif (/^hp 2\s*=\s*(\d+)/)                       { $units{$unit}{'hp 2'} = $1; }
-            elsif (/^hp 3\s*=\s*(\d+)/)                       { $units{$unit}{'hp 3'} = $1; }
-            elsif (/^hp 4\s*=\s*(\d+)/)                       { $units{$unit}{'hp 4'} = $1; }
-            elsif (/^cost\s*=\s*(\d+)/)                       { $units{$unit}{'cost'} = $1; }
-            elsif (/^max evo\s*=\s*(\d+)/)                    { $units{$unit}{'max evo'} = $1; }
-            elsif (/^unreleased\s*=\s*(\S+)/)                 { $units{$unit}{'unreleased'} = $1; }
-            elsif (/^illust\s*=\s*(\S.*\S)/)                  { $units{$unit}{'illust'} = $1; }
-            elsif (/^CV\s*=\s*(\S.*\S)/)                      { $units{$unit}{'CV'} = $1; }
+            elsif (/^gender\s*=\s*(\w+)/)                       { $units{$unit}{'gender'} = lcfirst $1; }
+            elsif (/^skill 1\s*=\s*(\w[\w\s'&-]*[\w!])/)        { $units{$unit}{'skill 1'} = $1; }
+            elsif (/^skill 1 type\s*=\s*(\w+)/)                 { $units{$unit}{'skill 1 type'} = ucfirst $1; }
+            elsif (/^skill 1 desc\s*=\s*(\w[\w\s'&-\/]*\w)/)    { $units{$unit}{'skill 1 desc'} = $1; }
+            elsif (/^skill 1 desc\+\s*=\s*(\w[\w\s'&-\/]*\w)/)  { $units{$unit}{'skill 1 desc+'} = $1; }
+            elsif (/^skill 1 proc\s*=\s*(\d+)/)                 { $units{$unit}{'skill 1 proc'} = $1; }
+            elsif (/^skill 2\s*=\s*(\w[\w\s'&-]*[\w!])/)        { $units{$unit}{'skill 2'} = $1; }
+            elsif (/^skill 2 type\s*=\s*(\w+)/      )           { $units{$unit}{'skill 2 type'} = ucfirst $1; }
+            elsif (/^skill 2 desc\s*=\s*(\w[\w\s'&-\/]*\w)/)    { $units{$unit}{'skill 2 desc'} = $1; }
+            elsif (/^skill 2 desc\+\s*=\s*(\w[\w\s'&-\/]*\w)/)  { $units{$unit}{'skill 2 desc+'} = $1; }
+            elsif (/^skill 2 proc\s*=\s*(\d+)/)                 { $units{$unit}{'skill 2 proc'} = $1; }
+            elsif (/^ability\s*=\s*(\w[\w\s'&-]*\w)/)           { $units{$unit}{'ability'} = $1; }
+            elsif (/^atk 0\s*=\s*(\d+)/)                        { $units{$unit}{'atk 0'} = $1; }
+            elsif (/^atk 1\s*=\s*(\d+)/)                        { $units{$unit}{'atk 1'} = $1; }
+            elsif (/^atk 2\s*=\s*(\d+)/)                        { $units{$unit}{'atk 2'} = $1; }
+            elsif (/^atk 3\s*=\s*(\d+)/)                        { $units{$unit}{'atk 3'} = $1; }
+            elsif (/^atk 4\s*=\s*(\d+)/)                        { $units{$unit}{'atk 4'} = $1; }
+            elsif (/^hp 0\s*=\s*(\d+)/)                         { $units{$unit}{'hp 0'} = $1; }
+            elsif (/^hp 1\s*=\s*(\d+)/)                         { $units{$unit}{'hp 1'} = $1; }
+            elsif (/^hp 2\s*=\s*(\d+)/)                         { $units{$unit}{'hp 2'} = $1; }
+            elsif (/^hp 3\s*=\s*(\d+)/)                         { $units{$unit}{'hp 3'} = $1; }
+            elsif (/^hp 4\s*=\s*(\d+)/)                         { $units{$unit}{'hp 4'} = $1; }
+            elsif (/^cost\s*=\s*(\d+)/)                         { $units{$unit}{'cost'} = $1; }
+            elsif (/^max evo\s*=\s*(\d+)/)                      { $units{$unit}{'max evo'} = $1; }
+            elsif (/^unreleased\s*=\s*(\S+)/)                   { $units{$unit}{'unreleased'} = $1; }
+            elsif (/^illust\s*=\s*(\S.*\S)/)                    { $units{$unit}{'illust'} = $1; }
+            elsif (/^CV\s*=\s*(\S.*\S)/)                        { $units{$unit}{'CV'} = $1; }
         }
     }
 }
