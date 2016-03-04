@@ -102,8 +102,8 @@ DOIT:
 # get list of units
 my @unitlist = $bot->get_pages_in_category('Category:Units');
 
-# remove subcategories and Grimoires from list of units
-@unitlist = grep { ! /^Category:/ && ! /^Grimoire/ } @unitlist;
+# remove subcategories, Grimoires and Scrolls from list of units
+@unitlist = grep { ! /^Category:/ && ! /^Grimoire/ && ! /^Scroll/ } @unitlist;
 
 # get data for each unit
 my ($unit, %units);
