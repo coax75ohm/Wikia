@@ -309,11 +309,19 @@ my %skills;
 foreach $unit (@unitlist) {
     if (defined $units{$unit}{'skill 1 desc'} && defined $units{$unit}{'skill 1 type'}) {
         $skills{$units{$unit}{'skill 1 desc'}}{$units{$unit}{'skill 1 type'}}++;
-        #print "$unit skill 1: $units{$unit}{'skill 1 type'} - $units{$unit}{'skill 1 desc'}\n"; 
+        #print "$unit skill 1: $units{$unit}{'skill 1 type'} - $units{$unit}{'skill 1 desc'}\n";
+    }
+    if (defined $units{$unit}{'skill 1 desc+'} && defined $units{$unit}{'skill 1 type'}) {
+        $skills{$units{$unit}{'skill 1 desc+'}}{$units{$unit}{'skill 1 type'}}++;
+        #print "$unit skill 1: $units{$unit}{'skill 1 type'} - $units{$unit}{'skill 1 desc+'}\n";
     }
     if (defined $units{$unit}{'skill 2 desc'} && defined $units{$unit}{'skill 2 type'}) {
         $skills{$units{$unit}{'skill 2 desc'}}{$units{$unit}{'skill 2 type'}}++;
-        #print "$unit skill 2: $units{$unit}{'skill 2 type'} - $units{$unit}{'skill 2 desc'}\n"; 
+        #print "$unit skill 2: $units{$unit}{'skill 2 type'} - $units{$unit}{'skill 2 desc'}\n";
+    }
+    if (defined $units{$unit}{'skill 2 desc+'} && defined $units{$unit}{'skill 2 type'}) {
+        $skills{$units{$unit}{'skill 2 desc+'}}{$units{$unit}{'skill 2 type'}}++;
+        #print "$unit skill 2: $units{$unit}{'skill 2 type'} - $units{$unit}{'skill 2 desc+'}\n";
     }
 }
 
